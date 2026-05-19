@@ -285,25 +285,21 @@ function parseHash(raw) {
   return JSON.parse(clean);
 }
 
-function loadData() {
-  try {
-    const hash = decodeURIComponent(window.location.hash.slice(1));
-    if (hash && hash.startsWith('{')) {
-      DATA = parseHash(hash);
-      return;
-    }
-  } catch(e) { console.warn('Hash parse error', e); }
+function parseData(raw) {
+  return JSON.parse(raw.replace(/(\d)\.([,}\]])/g, '$1$2'));
+}
 
-  // listen for hash changes — fires when slicer changes iframe src
-  window.addEventListener('hashchange', () => {
-    try {
-      const hash = decodeURIComponent(window.location.hash.slice(1));
-      if (hash && hash.startsWith('{')) {
-        DATA = parseHash(hash);
-        render();
-      }
-    } catch(e) { console.warn('hashchange parse error', e); }
-  });
+function loadData() {
+  // Power BI HTML Viewer strips URL hashes — use ?d= query param instead
+  try {
+    const p = new URLSearchParams(window.location.search).get('d');
+    if (p) { DATA = parseData(decodeURIComponent(p)); return; }
+  } catch(e) { console.warn('param error', e); }
+  // Fallback: hash works in direct browser testing
+  try {
+    const h = decodeURIComponent(window.location.hash.slice(1));
+    if (h && h.startsWith('{')) { DATA = parseData(h); return; }
+  } catch(e) { console.warn('hash error', e); }
 }
 
 /* ═══════════════════════════════════════════════
