@@ -269,24 +269,31 @@ let DATA = {month:'—', rows:[]};
    <iframe src="https://.../#JSONHERE">
    Hash format: {month:"Sep-25", rows:[{l1,l2,l3,l4,mcy,mpy,md,...}]}
 ═══════════════════════════════════════════════ */
+function parseHash(raw) {
+  // DAX FORMAT() produces trailing dots on whole numbers e.g. 37201500.
+  // which is invalid JSON. Strip them before parsing.
+  const clean = raw.replace(/(\d)\.([,}\]])/g, '$1$2');
+  return JSON.parse(clean);
+}
+
 function loadData() {
   try {
     const hash = decodeURIComponent(window.location.hash.slice(1));
     if (hash && hash.startsWith('{')) {
-      DATA = JSON.parse(hash);
+      DATA = parseHash(hash);
       return;
     }
   } catch(e) { console.warn('Hash parse error', e); }
 
-  // also listen for hash changes (slicer update reloads iframe src)
+  // listen for hash changes — fires when slicer changes iframe src
   window.addEventListener('hashchange', () => {
     try {
       const hash = decodeURIComponent(window.location.hash.slice(1));
       if (hash && hash.startsWith('{')) {
-        DATA = JSON.parse(hash);
+        DATA = parseHash(hash);
         render();
       }
-    } catch(e) {}
+    } catch(e) { console.warn('hashchange parse error', e); }
   });
 }
 
