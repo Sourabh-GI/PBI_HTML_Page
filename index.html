@@ -1,261 +1,166 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>Net Sales Matrix</title>
 <style>
-/* ─────────────────────────────────────────────
-   TOKENS
-───────────────────────────────────────────── */
 *{box-sizing:border-box;margin:0;padding:0}
-:root{
-  --fs:13px;
-  --hier-w:230px;
-  --col-w:74px;
 
-  --bg:#ffffff;
-  --bg-2:#f8f8f7;
-  --bg-3:#f1f0ec;
-  --tx:#1a1a18;
-  --tx-2:#6b6b68;
-  --tx-3:#9b9b98;
-  --bd:rgba(0,0,0,0.09);
-  --bd-em:rgba(0,0,0,0.18);
-
-  --green-bg:#eaf3de; --green-tx:#3b6d11; --green-bd:#c0dd97;
-  --amber-bg:#faeeda; --amber-tx:#854f0b; --amber-bd:#fac775;
-  --blue-bg:#e6f1fb;  --blue-tx:#185fa5;  --blue-bd:#b5d4f4;
-  --red-tx:#a32d2d;
-
-  --l1-bg:#eceae4;
-  --l2-bg:#f4f3ef;
-  --l3-bg:#f9f9f7;
-  --l4-bg:#ffffff;
-  --tot-bg:#e4e2db;
-
-  --r:8px; --r-lg:12px;
+[data-theme="light"]{
+  --bg:#ffffff;--bg2:#f8f8f7;--bg3:#f1f0ec;
+  --tx:#1a1a18;--tx2:#6b6b68;--tx3:#9b9b98;
+  --bd:rgba(0,0,0,0.09);--bde:rgba(0,0,0,0.18);
+  --gbg:#eaf3de;--gtx:#3b6d11;--gbd:#c0dd97;
+  --abg:#faeeda;--atx:#854f0b;--abd:#fac775;
+  --bbg:#e6f1fb;--btx:#185fa5;--bbd:#b5d4f4;
+  --rtx:#a32d2d;
+  --l1:#eceae4;--l2:#f4f3ef;--l3:#f9f9f7;--l4:#ffffff;--lt:#e4e2db;
+  --panel-icon:☀️;
 }
-@media(prefers-color-scheme:dark){
-  :root{
-    --bg:#1c1c1a; --bg-2:#252523; --bg-3:#2e2e2b;
-    --tx:#f0ede8; --tx-2:#a8a8a4; --tx-3:#6b6b68;
-    --bd:rgba(255,255,255,0.09); --bd-em:rgba(255,255,255,0.18);
-    --green-bg:#1a2e0a; --green-tx:#97c459; --green-bd:#3b6d11;
-    --amber-bg:#2a1e06; --amber-tx:#ef9f27; --amber-bd:#854f0b;
-    --blue-bg:#0a1e36;  --blue-tx:#85b7eb;  --blue-bd:#185fa5;
-    --red-tx:#f09595;
-    --l1-bg:#2e2e2b; --l2-bg:#252523; --l3-bg:#202020; --l4-bg:#1c1c1a;
-    --tot-bg:#363632;
-  }
+[data-theme="dark"]{
+  --bg:#1c1c1a;--bg2:#252523;--bg3:#2e2e2b;
+  --tx:#f0ede8;--tx2:#a8a8a4;--tx3:#6b6b68;
+  --bd:rgba(255,255,255,0.09);--bde:rgba(255,255,255,0.18);
+  --gbg:#1a2e0a;--gtx:#97c459;--gbd:#3b6d11;
+  --abg:#2a1e06;--atx:#ef9f27;--abd:#854f0b;
+  --bbg:#0a1e36;--btx:#85b7eb;--bbd:#185fa5;
+  --rtx:#f09595;
+  --l1:#2e2e2b;--l2:#252523;--l3:#202020;--l4:#1c1c1a;--lt:#363632;
+  --panel-icon:🌙;
 }
-body{font-family:'DM Sans',system-ui,sans-serif;font-size:var(--fs);color:var(--tx);background:transparent}
 
-/* ─────────────────────────────────────────────
-   TOOLBAR
-───────────────────────────────────────────── */
-.toolbar{display:flex;align-items:center;justify-content:space-between;padding:10px 12px 8px}
+:root{--fs:13px;--hw:224px;--cw:72px;--r:8px;--rlg:12px}
+
+body{font-family:'DM Sans',system-ui,sans-serif;font-size:var(--fs);color:var(--tx);background:var(--bg);transition:background .2s,color .2s}
+
+/* ── toolbar ── */
+.toolbar{display:flex;align-items:center;justify-content:space-between;padding:10px 14px 8px;border-bottom:.5px solid var(--bd)}
 .t-left{display:flex;align-items:center;gap:8px}
-.vis-title{font-size:14px;font-weight:600;letter-spacing:-0.01em;color:var(--tx)}
-.month-pill{
-  font-size:11px;font-weight:500;padding:2px 10px;border-radius:20px;
-  background:var(--blue-bg);color:var(--blue-tx);border:0.5px solid var(--blue-bd);
-}
-.gear-btn{
-  display:flex;align-items:center;gap:5px;background:transparent;
-  border:0.5px solid var(--bd-em);border-radius:var(--r);
-  padding:5px 10px;font-size:12px;color:var(--tx-2);cursor:pointer;
-  font-family:inherit;transition:background .12s,color .12s;
-}
-.gear-btn:hover{background:var(--bg-2);color:var(--tx)}
-.gear-btn svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.vis-title{font-size:14px;font-weight:600;letter-spacing:-.01em;color:var(--tx)}
+.mpill{font-size:11px;font-weight:500;padding:2px 10px;border-radius:20px;background:var(--bbg);color:var(--btx);border:.5px solid var(--bbd)}
+.gear-btn{display:flex;align-items:center;gap:5px;background:transparent;border:.5px solid var(--bde);border-radius:var(--r);padding:5px 10px;font-size:12px;color:var(--tx2);cursor:pointer;font-family:inherit;transition:background .12s,color .12s}
+.gear-btn:hover{background:var(--bg2);color:var(--tx)}
+.gear-btn svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
 
-/* ─────────────────────────────────────────────
-   TABLE WRAPPER
-───────────────────────────────────────────── */
-.t-wrap{overflow:auto;border-top:0.5px solid var(--bd);max-height:calc(100vh - 56px)}
+/* ── table wrapper ── */
+.t-wrap{overflow:auto;max-height:calc(100vh - 55px)}
 table{border-collapse:collapse;width:max-content;min-width:100%;table-layout:fixed}
 th,td{padding:0}
-
-/* ─────────────────────────────────────────────
-   HEADER ROWS
-───────────────────────────────────────────── */
 thead{position:sticky;top:0;z-index:10}
 
-.th-hier{
-  position:sticky;left:0;z-index:12;background:var(--bg-2);
-  min-width:var(--hier-w);max-width:var(--hier-w);width:var(--hier-w);
-  padding:6px 10px;font-size:10px;font-weight:600;letter-spacing:.05em;
-  text-transform:uppercase;color:var(--tx-3);
-  border-right:0.5px solid var(--bd-em);border-bottom:0.5px solid var(--bd-em);
-}
-.th-grp{
-  text-align:center;font-size:11px;font-weight:500;letter-spacing:.02em;
-  padding:5px 4px;border-right:0.5px solid var(--bd-em);border-bottom:0.5px solid var(--bd);
-}
-.th-grp.plain{background:var(--bg-2);color:var(--tx-2)}
-.th-grp.g-month{background:var(--blue-bg);color:var(--blue-tx)}
-.th-grp.g-h{background:var(--amber-bg);color:var(--amber-tx)}
-.th-grp.g-fy{background:var(--green-bg);color:var(--green-tx)}
+/* ── header cells ── */
+.th-h{position:sticky;left:0;z-index:12;background:var(--bg2);min-width:var(--hw);max-width:var(--hw);width:var(--hw);padding:5px 8px;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:var(--tx3);border-right:.5px solid var(--bde);border-bottom:.5px solid var(--bde)}
+.th-g{text-align:center;font-size:11px;font-weight:500;padding:5px 3px;border-right:.5px solid var(--bde);border-bottom:.5px solid var(--bd)}
+.th-g.pl{background:var(--bg2);color:var(--tx2)}
+.th-g.gm{background:var(--bbg);color:var(--btx)}
+.th-g.gh{background:var(--abg);color:var(--atx)}
+.th-g.gf{background:var(--gbg);color:var(--gtx)}
+.th-s{text-align:center;font-size:10px;padding:3px 2px;background:var(--bg2);color:var(--tx3);border-right:.5px solid var(--bd);border-bottom:.5px solid var(--bde)}
+.th-s.cy{color:var(--tx);font-weight:500;font-size:11px}
+.th-s.le{border-right:.5px solid var(--bde)}
+.th-s.sm{background:color-mix(in srgb,var(--bg2) 65%,var(--bbg) 35%)}
+.th-s.sh{background:color-mix(in srgb,var(--bg2) 65%,var(--abg) 35%)}
+.th-s.sf{background:color-mix(in srgb,var(--bg2) 65%,var(--gbg) 35%)}
 
-.th-sub{
-  text-align:center;font-size:10px;padding:4px 2px;color:var(--tx-3);font-weight:400;
-  background:var(--bg-2);
-  border-right:0.5px solid var(--bd);border-bottom:0.5px solid var(--bd-em);
-}
-.th-sub.cy{color:var(--tx);font-weight:500;font-size:11px}
-.th-sub.last{border-right:0.5px solid var(--bd-em)}
-.th-sub.s-month{background:color-mix(in srgb,var(--bg-2) 65%,var(--blue-bg) 35%)}
-.th-sub.s-h{background:color-mix(in srgb,var(--bg-2) 65%,var(--amber-bg) 35%)}
-.th-sub.s-fy{background:color-mix(in srgb,var(--bg-2) 65%,var(--green-bg) 35%)}
-
-/* ─────────────────────────────────────────────
-   HIERARCHY COLUMN (sticky)
-───────────────────────────────────────────── */
-.col-h{
-  position:sticky;left:0;z-index:5;
-  min-width:var(--hier-w);max-width:var(--hier-w);width:var(--hier-w);
-  border-right:0.5px solid var(--bd-em);border-bottom:0.5px solid var(--bd);
-  overflow:hidden;
-}
-.h-inner{display:flex;align-items:center;gap:4px;padding:5px 8px;height:100%}
-.h-lbl{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;font-size:var(--fs)}
-.xbtn{
-  background:none;border:none;cursor:pointer;flex-shrink:0;
-  width:18px;height:18px;display:flex;align-items:center;justify-content:center;
-  border-radius:4px;color:var(--tx-2);transition:background .1s;
-}
-.xbtn:hover{background:var(--bd)}
-.xbtn svg{width:11px;height:11px;stroke:currentColor;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+/* ── sticky hierarchy column ── */
+.col-h{position:sticky;left:0;z-index:5;min-width:var(--hw);max-width:var(--hw);width:var(--hw);border-right:.5px solid var(--bde);border-bottom:.5px solid var(--bd);overflow:hidden}
+.h-in{display:flex;align-items:center;gap:4px;padding:5px 8px;height:100%}
+.h-lb{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;font-size:var(--fs)}
+.xb{background:none;border:none;cursor:pointer;flex-shrink:0;width:18px;height:18px;display:flex;align-items:center;justify-content:center;border-radius:4px;color:var(--tx2);transition:background .1s}
+.xb:hover{background:var(--bd)}
+.xb svg{width:11px;height:11px;stroke:currentColor;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
 .lpad{width:18px;flex-shrink:0}
 
-/* ─────────────────────────────────────────────
-   DATA CELLS
-───────────────────────────────────────────── */
-.cell{
-  text-align:right;padding:5px 7px;
-  font-size:var(--fs);font-variant-numeric:tabular-nums;
-  border-right:0.5px solid var(--bd);border-bottom:0.5px solid var(--bd);
-  min-width:var(--col-w);max-width:var(--col-w);width:var(--col-w);
-}
-.cell.last{border-right:0.5px solid var(--bd-em)}
-.cell.c-month{background:color-mix(in srgb,transparent 55%,var(--blue-bg) 45%)}
-.cell.c-h{background:color-mix(in srgb,transparent 55%,var(--amber-bg) 45%)}
-.cell.c-fy{background:color-mix(in srgb,transparent 55%,var(--green-bg) 45%)}
-.cell.delta{font-size:11px}
-.pos{color:var(--green-tx)}.neg{color:var(--red-tx)}.neu{color:var(--tx-3)}
-.dash{color:var(--tx-3)}
+/* ── data cells ── */
+.c{text-align:right;padding:5px 7px;font-size:var(--fs);font-variant-numeric:tabular-nums;border-right:.5px solid var(--bd);border-bottom:.5px solid var(--bd);min-width:var(--cw);max-width:var(--cw);width:var(--cw)}
+.c.le{border-right:.5px solid var(--bde)}
+.c.cm{background:color-mix(in srgb,transparent 55%,var(--bbg) 45%)}
+.c.ch{background:color-mix(in srgb,transparent 55%,var(--abg) 45%)}
+.c.cf{background:color-mix(in srgb,transparent 55%,var(--gbg) 45%)}
+.c.dt{font-size:11px}
+.pos{color:var(--gtx)}.neg{color:var(--rtx)}.neu{color:var(--tx3)}
+.dash{color:var(--tx3)}
 
-/* row-level backgrounds */
-.r-l1 .col-h,.r-l1 td{background:var(--l1-bg)}
-.r-l1 .h-lbl{font-weight:700;font-size:13px}
-.r-l1 .cell.c-month{background:color-mix(in srgb,var(--l1-bg) 50%,var(--blue-bg) 50%)}
-.r-l1 .cell.c-h{background:color-mix(in srgb,var(--l1-bg) 50%,var(--amber-bg) 50%)}
-.r-l1 .cell.c-fy{background:color-mix(in srgb,var(--l1-bg) 50%,var(--green-bg) 50%)}
+/* ── row level backgrounds ── */
+.rl1 .col-h,.rl1 td{background:var(--l1)}
+.rl1 .h-lb{font-weight:700;font-size:13px}
+.rl1 .c.cm{background:color-mix(in srgb,var(--l1) 50%,var(--bbg) 50%)}
+.rl1 .c.ch{background:color-mix(in srgb,var(--l1) 50%,var(--abg) 50%)}
+.rl1 .c.cf{background:color-mix(in srgb,var(--l1) 50%,var(--gbg) 50%)}
+.rl2 .col-h,.rl2 td{background:var(--l2)}
+.rl2 .h-lb{font-weight:600;font-size:12px}
+.rl2 .c.cm{background:color-mix(in srgb,var(--l2) 55%,var(--bbg) 45%)}
+.rl2 .c.ch{background:color-mix(in srgb,var(--l2) 55%,var(--abg) 45%)}
+.rl2 .c.cf{background:color-mix(in srgb,var(--l2) 55%,var(--gbg) 45%)}
+.rl3 .col-h,.rl3 td{background:var(--l3)}
+.rl3 .h-lb{font-weight:500;font-size:12px;color:var(--tx2)}
+.rl4 .col-h,.rl4 td{background:var(--l4)}
+.rl4 .h-lb{font-size:12px;color:var(--tx2)}
+.rtot .col-h,.rtot td{background:var(--lt)}
+.rtot .h-lb{font-weight:700}
+.rtot td{border-top:.5px solid var(--bde)}
+.rtot .c.cm{background:color-mix(in srgb,var(--lt) 50%,var(--bbg) 50%)}
+.rtot .c.ch{background:color-mix(in srgb,var(--lt) 50%,var(--abg) 50%)}
+.rtot .c.cf{background:color-mix(in srgb,var(--lt) 50%,var(--gbg) 50%)}
+body.compact .c{padding:3px 7px}
+body.compact .h-in{padding:3px 8px}
 
-.r-l2 .col-h,.r-l2 td{background:var(--l2-bg)}
-.r-l2 .h-lbl{font-weight:600;font-size:12px}
-.r-l2 .cell.c-month{background:color-mix(in srgb,var(--l2-bg) 55%,var(--blue-bg) 45%)}
-.r-l2 .cell.c-h{background:color-mix(in srgb,var(--l2-bg) 55%,var(--amber-bg) 45%)}
-.r-l2 .cell.c-fy{background:color-mix(in srgb,var(--l2-bg) 55%,var(--green-bg) 45%)}
-
-.r-l3 .col-h,.r-l3 td{background:var(--l3-bg)}
-.r-l3 .h-lbl{font-weight:500;font-size:12px;color:var(--tx-2)}
-
-.r-l4 .col-h,.r-l4 td{background:var(--l4-bg)}
-.r-l4 .h-lbl{font-size:12px;color:var(--tx-2)}
-
-.r-tot .col-h,.r-tot td{background:var(--tot-bg)}
-.r-tot .h-lbl{font-weight:700;font-size:var(--fs)}
-.r-tot td{border-top:0.5px solid var(--bd-em)}
-.r-tot .cell.c-month{background:color-mix(in srgb,var(--tot-bg) 50%,var(--blue-bg) 50%)}
-.r-tot .cell.c-h{background:color-mix(in srgb,var(--tot-bg) 50%,var(--amber-bg) 50%)}
-.r-tot .cell.c-fy{background:color-mix(in srgb,var(--tot-bg) 50%,var(--green-bg) 50%)}
-
-/* compact mode */
-body.compact .cell{padding:3px 7px}
-body.compact .h-inner{padding:3px 8px}
-
-/* ─────────────────────────────────────────────
-   SETTINGS OVERLAY
-───────────────────────────────────────────── */
-.overlay{
-  display:none;position:fixed;inset:0;
-  background:rgba(0,0,0,0.3);z-index:200;
-  align-items:flex-start;justify-content:flex-end;padding:10px 10px 0 0;
-}
+/* ── settings overlay ── */
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.3);z-index:200;align-items:flex-start;justify-content:flex-end;padding:10px 10px 0 0}
 .overlay.open{display:flex}
-.panel{
-  background:var(--bg);border:0.5px solid var(--bd-em);
-  border-radius:var(--r-lg);width:320px;max-height:92vh;
-  overflow-y:auto;display:flex;flex-direction:column;
-}
-.p-head{
-  display:flex;align-items:center;justify-content:space-between;
-  padding:14px 16px 10px;border-bottom:0.5px solid var(--bd);
-  position:sticky;top:0;background:var(--bg);z-index:1;
-}
+.panel{background:var(--bg);border:.5px solid var(--bde);border-radius:var(--rlg);width:300px;max-height:92vh;overflow-y:auto;display:flex;flex-direction:column}
+.p-head{display:flex;align-items:center;justify-content:space-between;padding:14px 16px 10px;border-bottom:.5px solid var(--bd);position:sticky;top:0;background:var(--bg);z-index:1}
 .p-title{font-size:14px;font-weight:600;color:var(--tx)}
-.p-close{
-  background:transparent;border:none;cursor:pointer;
-  color:var(--tx-2);padding:3px;border-radius:5px;display:flex;
-}
-.p-close:hover{background:var(--bg-2)}
+.p-close{background:transparent;border:none;cursor:pointer;color:var(--tx2);padding:3px;border-radius:5px;display:flex}
+.p-close:hover{background:var(--bg2)}
 .p-close svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round}
 .p-body{padding:0 16px 16px}
-.sec-lbl{
-  font-size:10px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;
-  color:var(--tx-3);padding:14px 0 7px;
-}
-.sec-lbl:first-of-type{padding-top:12px}
+.sec{font-size:10px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--tx3);padding:14px 0 7px}
+.sec:first-of-type{padding-top:12px}
 
-/* font-size segmented control */
+/* theme toggle row — special styling */
+.theme-row{display:flex;align-items:center;justify-content:space-between;padding:8px 10px;border-radius:8px;background:var(--bg2);margin-bottom:4px;border:.5px solid var(--bd)}
+.theme-lbl{font-size:13px;font-weight:500;color:var(--tx);display:flex;align-items:center;gap:7px}
+.theme-icon{font-size:16px;line-height:1}
+.theme-toggle{display:flex;gap:4px}
+.th-btn{padding:4px 10px;border-radius:6px;border:.5px solid var(--bde);background:transparent;font-size:11px;font-weight:500;color:var(--tx2);cursor:pointer;font-family:inherit;transition:background .12s,color .12s}
+.th-btn.active{background:var(--btx);color:#fff;border-color:var(--btx)}
+
+/* font size segmented */
 .seg{display:flex;gap:4px;flex-wrap:wrap}
-.seg-btn{
-  flex:1;min-width:38px;padding:5px 4px;text-align:center;
-  border:0.5px solid var(--bd-em);border-radius:6px;
-  font-size:12px;background:transparent;color:var(--tx-2);
-  cursor:pointer;font-family:inherit;transition:background .1s,color .1s;
-}
-.seg-btn:hover{background:var(--bg-2)}
-.seg-btn.on{background:var(--blue-bg);color:var(--blue-tx);border-color:var(--blue-bd);font-weight:500}
+.seg-btn{flex:1;min-width:36px;padding:5px 4px;text-align:center;border:.5px solid var(--bde);border-radius:6px;font-size:12px;background:transparent;color:var(--tx2);cursor:pointer;font-family:inherit;transition:background .1s,color .1s}
+.seg-btn:hover{background:var(--bg2)}
+.seg-btn.on{background:var(--bbg);color:var(--btx);border-color:var(--bbd);font-weight:500}
 
-/* column chip toggles */
+/* column chips */
 .chips{display:flex;flex-direction:column;gap:1px}
-.chip{
-  display:flex;align-items:center;justify-content:space-between;
-  padding:7px 10px;border-radius:8px;border:0.5px solid transparent;
-  transition:background .1s,border-color .1s;
-}
-.chip:hover{background:var(--bg-2)}
-.chip.on{background:var(--bg-2);border-color:var(--bd)}
+.chip{display:flex;align-items:center;justify-content:space-between;padding:7px 10px;border-radius:8px;border:.5px solid transparent;transition:background .1s}
+.chip:hover{background:var(--bg2)}
+.chip.on{background:var(--bg2);border-color:var(--bd)}
 .chip-lft{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--tx)}
 .dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
-.d-m{background:var(--blue-tx)}.d-q{background:var(--tx-3)}
-.d-h{background:var(--amber-tx)}.d-fy{background:var(--green-tx)}
+.d-m{background:var(--btx)}.d-q{background:var(--tx3)}.d-h{background:var(--atx)}.d-fy{background:var(--gtx)}
 
-/* pill toggle */
+/* pill */
 .pill{position:relative;width:38px;height:22px;flex-shrink:0}
 .pill input{opacity:0;width:0;height:0;position:absolute}
-.pill-tr{
-  position:absolute;inset:0;border-radius:22px;
-  background:var(--bd-em);cursor:pointer;transition:background .18s;
-}
-.pill-tr::after{
-  content:'';position:absolute;width:16px;height:16px;border-radius:50%;
-  background:#fff;top:3px;left:3px;transition:transform .18s;
-}
-.pill input:checked+.pill-tr{background:var(--blue-tx)}
+.pill-tr{position:absolute;inset:0;border-radius:22px;background:var(--bde);cursor:pointer;transition:background .18s}
+.pill-tr::after{content:'';position:absolute;width:16px;height:16px;border-radius:50%;background:#fff;top:3px;left:3px;transition:transform .18s}
+.pill input:checked+.pill-tr{background:var(--btx)}
 .pill input:checked+.pill-tr::after{transform:translateX(16px)}
 
-/* display option rows */
-.opt{
-  display:flex;align-items:center;justify-content:space-between;
-  padding:8px 0;border-bottom:0.5px solid var(--bd);
-}
+/* opt rows */
+.opt{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:.5px solid var(--bd)}
 .opt:last-child{border-bottom:none}
-.opt-info .opt-lbl{font-size:13px;color:var(--tx)}
-.opt-info .opt-sub{font-size:11px;color:var(--tx-3);margin-top:2px}
+.opt-lbl{font-size:13px;color:var(--tx)}
+.opt-sub{font-size:11px;color:var(--tx3);margin-top:2px}
+
+/* empty state */
+.empty{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:60px 24px;color:var(--tx3);text-align:center}
+.empty svg{width:36px;height:36px;stroke:var(--tx3);fill:none;stroke-width:1.5;stroke-linecap:round}
+.empty-title{font-size:14px;font-weight:500;color:var(--tx2)}
+.empty-sub{font-size:12px;line-height:1.6;max-width:280px}
 </style>
 </head>
 <body>
@@ -263,9 +168,9 @@ body.compact .h-inner{padding:3px 8px}
 <div class="toolbar">
   <div class="t-left">
     <span class="vis-title">Net Sales</span>
-    <span class="month-pill" id="month-pill">—</span>
+    <span class="mpill" id="mpill">—</span>
   </div>
-  <button class="gear-btn" onclick="openPanel()" aria-label="Configure display">
+  <button class="gear-btn" onclick="openPanel()" aria-label="Settings">
     <svg viewBox="0 0 24 24" aria-hidden="true">
       <path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"/>
       <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1Z"/>
@@ -275,213 +180,129 @@ body.compact .h-inner{padding:3px 8px}
 </div>
 
 <div class="t-wrap">
-  <table id="tbl"><thead id="t-head"></thead><tbody id="t-body"></tbody></table>
+  <table id="tbl"><thead id="thead"></thead><tbody id="tbody"></tbody></table>
 </div>
 
-<!-- SETTINGS PANEL -->
+<!-- settings panel -->
 <div class="overlay" id="overlay" onclick="bgClick(event)">
   <div class="panel">
     <div class="p-head">
       <span class="p-title">Display settings</span>
-      <button class="p-close" onclick="closePanel()" aria-label="Close settings">
+      <button class="p-close" onclick="closePanel()" aria-label="Close">
         <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
       </button>
     </div>
     <div class="p-body">
-      <div class="sec-lbl">Font size</div>
+
+      <!-- THEME -->
+      <div class="sec">Theme</div>
+      <div class="theme-row">
+        <span class="theme-lbl">
+          <span class="theme-icon" id="theme-icon">☀️</span>
+          <span id="theme-lbl-text">Light mode</span>
+        </span>
+        <div class="theme-toggle">
+          <button class="th-btn active" id="btn-light" onclick="setTheme('light')">Light</button>
+          <button class="th-btn" id="btn-dark" onclick="setTheme('dark')">Dark</button>
+        </div>
+      </div>
+
+      <!-- FONT SIZE -->
+      <div class="sec">Font size</div>
       <div class="seg" id="fs-seg"></div>
-      <div class="sec-lbl">Columns</div>
+
+      <!-- COLUMNS -->
+      <div class="sec">Columns</div>
       <div class="chips" id="col-chips"></div>
-      <div class="sec-lbl">Display options</div>
+
+      <!-- DISPLAY OPTIONS -->
+      <div class="sec">Display options</div>
       <div id="disp-opts"></div>
+
     </div>
   </div>
 </div>
 
 <script>
-/* ═══════════════════════════════════════════════════════════════
-   1. FIELD MAP  — exact column names as Power BI HTML Viewer
-      injects them.  Edit ONLY these strings if measure names
-      change in the model.
-═══════════════════════════════════════════════════════════════ */
-const F = {
-  /* Hierarchy dims */
-  L1:     'MasterBrand[Brand Cluster]',
-  L1S:    'MasterBrand[Brand Cluster SortOrder]',
-  L2:     'MasterBrand[Skin/Personal care]',
-  L2S:    'MasterBrand[Skin/Personal Care SortOrder]',
-  L3:     'MasterBrand[Brand Subcategory Group]',
-  L3S:    'MasterBrand[Brand SubCategory Group Sort]',
-  L4:     'MasterBrand[Brand Subcategory Rename]',
-  /* Month name */
-  MON:    '[MonthName]',
-  /* Measures — internal alias names produced by HTML Viewer
-     when you add them in the Values field well.
-     HTML Viewer strips the table prefix and uses [alias]. */
-  MCY:    '[Month_CY]',  MPY:'[Month_PY]',  MD:'[Month_D]',
-  Q1CY:   '[Q1_CY]',    Q1PY:'[Q1_PY]',    Q1D:'[Q1_D]',
-  Q2CY:   '[Q2_CY]',    Q2PY:'[Q2_PY]',    Q2D:'[Q2_D]',
-  H1CY:   '[H1_CY]',    H1PY:'[H1_PY]',    H1D:'[H1_D]',
-  Q3CY:   '[Q3_CY]',    Q3PY:'[Q3_PY]',    Q3D:'[Q3_D]',
-  Q4CY:   '[Q4_CY]',    Q4PY:'[Q4_PY]',    Q4D:'[Q4_D]',
-  H2CY:   '[H2_CY]',    H2PY:'[H2_PY]',    H2D:'[H2_D]',
-  FYCY:   '[FY_CY]',    FYPY:'[FY_PY]',    FYD:'[FY_D]'
-};
-
-/* ═══════════════════════════════════════════════════════════════
-   2. PERIOD GROUP DEFINITIONS  (order = column render order)
-      To add a new period: push a new object here.
-      No other code changes needed.
-═══════════════════════════════════════════════════════════════ */
+/* ═══════════════════════════════════════════════
+   PERIOD GROUP REGISTRY
+   Add new periods here — nothing else needs changing
+═══════════════════════════════════════════════ */
 const GROUPS = [
-  { id:'mon', dotCls:'d-m', hCls:'g-month', sCls:'s-month', cCls:'c-month',
-    cy:F.MCY, py:F.MPY, d:F.MD },
-  { id:'q1',  dotCls:'d-q', hCls:'plain',   sCls:'',       cCls:'',
-    cy:F.Q1CY, py:F.Q1PY, d:F.Q1D },
-  { id:'q2',  dotCls:'d-q', hCls:'plain',   sCls:'',       cCls:'',
-    cy:F.Q2CY, py:F.Q2PY, d:F.Q2D },
-  { id:'h1',  dotCls:'d-h', hCls:'g-h',     sCls:'s-h',   cCls:'c-h',
-    cy:F.H1CY, py:F.H1PY, d:F.H1D },
-  { id:'q3',  dotCls:'d-q', hCls:'plain',   sCls:'',       cCls:'',
-    cy:F.Q3CY, py:F.Q3PY, d:F.Q3D },
-  { id:'q4',  dotCls:'d-q', hCls:'plain',   sCls:'',       cCls:'',
-    cy:F.Q4CY, py:F.Q4PY, d:F.Q4D },
-  { id:'h2',  dotCls:'d-h', hCls:'g-h',     sCls:'s-h',   cCls:'c-h',
-    cy:F.H2CY, py:F.H2PY, d:F.H2D },
-  { id:'fy',  dotCls:'d-fy', hCls:'g-fy',   sCls:'s-fy',  cCls:'c-fy',
-    cy:F.FYCY, py:F.FYPY, d:F.FYD }
+  {id:'mon', label:'Month', dotCls:'d-m', hCls:'gm', sCls:'sm', cCls:'cm', keys:['mcy','mpy','md']},
+  {id:'q1',  label:'Q1',    dotCls:'d-q', hCls:'pl', sCls:'',   cCls:'',   keys:['q1cy','q1py','q1d']},
+  {id:'q2',  label:'Q2',    dotCls:'d-q', hCls:'pl', sCls:'',   cCls:'',   keys:['q2cy','q2py','q2d']},
+  {id:'h1',  label:'H1',    dotCls:'d-h', hCls:'gh', sCls:'sh', cCls:'ch', keys:['h1cy','h1py','h1d']},
+  {id:'q3',  label:'Q3',    dotCls:'d-q', hCls:'pl', sCls:'',   cCls:'',   keys:['q3cy','q3py','q3d']},
+  {id:'q4',  label:'Q4',    dotCls:'d-q', hCls:'pl', sCls:'',   cCls:'',   keys:['q4cy','q4py','q4d']},
+  {id:'h2',  label:'H2',    dotCls:'d-h', hCls:'gh', sCls:'sh', cCls:'ch', keys:['h2cy','h2py','h2d']},
+  {id:'fy',  label:'FY',    dotCls:'d-fy',hCls:'gf', sCls:'sf', cCls:'cf', keys:['fycy','fypy','fyd']},
 ];
 
-/* Human labels — separate so GROUPS stays clean */
-const G_LABEL = { mon:'Month', q1:'Q1', q2:'Q2', h1:'H1', q3:'Q3', q4:'Q4', h2:'H2', fy:'FY' };
-
-/* ═══════════════════════════════════════════════════════════════
-   3. DISPLAY OPTIONS REGISTRY
-      Add new entries here to extend the settings panel.
-      Handle new keys in renderCells() or renderBody().
-═══════════════════════════════════════════════════════════════ */
+/* ═══════════════════════════════════════════════
+   DISPLAY OPTIONS REGISTRY
+   Add new toggles here
+═══════════════════════════════════════════════ */
 const DISP_OPTS = [
-  { key:'grandTotal', lbl:'Grand total row',         sub:'',                              def:true  },
-  { key:'deltaColor', lbl:'Colour Δ% values',        sub:'Green positive, red negative',  def:true  },
-  { key:'aggShade',   lbl:'Shade aggregate columns', sub:'H1, H2, FY highlighted',        def:true  },
-  { key:'compact',    lbl:'Compact row height',      sub:'',                              def:false }
+  {key:'grandTotal', lbl:'Grand total row',          sub:'',                              def:true},
+  {key:'deltaColor', lbl:'Colour Δ% values',         sub:'Green positive, red negative',  def:true},
+  {key:'aggShade',   lbl:'Shade aggregate columns',  sub:'H1, H2, FY',                   def:true},
+  {key:'compact',    lbl:'Compact row height',       sub:'',                              def:false},
 ];
 
-/* ═══════════════════════════════════════════════════════════════
-   4. LIVE STATE
-═══════════════════════════════════════════════════════════════ */
+/* ═══════════════════════════════════════════════
+   STATE
+═══════════════════════════════════════════════ */
 const S = {
+  theme:    'light',
   fontSize: 13,
-  vis: Object.fromEntries(GROUPS.map(g=>[g.id, true])),
-  opts: Object.fromEntries(DISP_OPTS.map(o=>[o.key, o.def]))
+  vis:      Object.fromEntries(GROUPS.map(g => [g.id, true])),
+  opts:     Object.fromEntries(DISP_OPTS.map(o => [o.key, o.def])),
 };
-const EX = { l1:{}, l2:{}, l3:{} };   /* expand state */
+const EX = {l1:{}, l2:{}, l3:{}};
 
-/* ═══════════════════════════════════════════════════════════════
-   5. DATA LAYER
-      Reads from window.PBIData (HTML Viewer injection),
-      falls back to embedded sample data.
-      Δ% columns arrive as decimal fractions (0.12 = 12%).
-═══════════════════════════════════════════════════════════════ */
-let ROWS = [];
-let MON_LABEL = '—';
+let DATA = {month:'—', rows:[]};
 
+/* ═══════════════════════════════════════════════
+   DATA LAYER — reads JSON from URL hash
+   DAX measure embeds JSON as:
+   <iframe src="https://.../#JSONHERE">
+   Hash format: {month:"Sep-25", rows:[{l1,l2,l3,l4,mcy,mpy,md,...}]}
+═══════════════════════════════════════════════ */
 function loadData() {
-  /* --- Power BI HTML Viewer data injection --- */
-  const raw = (typeof window.PBIData !== 'undefined') ? window.PBIData
-            : (typeof window.data    !== 'undefined') ? window.data
-            : null;
-  if (raw && Array.isArray(raw) && raw.length) {
-    ROWS = raw.map(parseRow);
-    const m = raw.find(r => r[F.MON] != null);
-    MON_LABEL = m ? String(m[F.MON]) : '—';
-    return;
-  }
-  /* --- postMessage push from HTML Viewer iframe host --- */
-  window.addEventListener('message', ev => {
+  try {
+    const hash = decodeURIComponent(window.location.hash.slice(1));
+    if (hash && hash.startsWith('{')) {
+      DATA = JSON.parse(hash);
+      return;
+    }
+  } catch(e) { console.warn('Hash parse error', e); }
+
+  // also listen for hash changes (slicer update reloads iframe src)
+  window.addEventListener('hashchange', () => {
     try {
-      const msg = typeof ev.data === 'string' ? JSON.parse(ev.data) : ev.data;
-      if (msg && msg.type === 'pbiData' && Array.isArray(msg.rows)) {
-        ROWS = msg.rows.map(parseRow);
-        const m = msg.rows.find(r => r[F.MON] != null);
-        MON_LABEL = m ? String(m[F.MON]) : '—';
+      const hash = decodeURIComponent(window.location.hash.slice(1));
+      if (hash && hash.startsWith('{')) {
+        DATA = JSON.parse(hash);
         render();
       }
     } catch(e) {}
   });
-  /* --- Fallback: embedded sample built from real query results --- */
-  ROWS = SAMPLE;
-  MON_LABEL = 'Sep-25';
 }
 
-function parseRow(r) {
-  const s  = k => r[k] != null ? String(r[k])  : '';
-  const n  = k => r[k] != null ? Number(r[k])   : null;
-  return {
-    l1:s(F.L1), l1s:n(F.L1S)||0,
-    l2:s(F.L2), l2s:n(F.L2S)||0,
-    l3:s(F.L3), l3s:n(F.L3S)||0,
-    l4:s(F.L4),
-    mcy:n(F.MCY), mpy:n(F.MPY), md:n(F.MD),
-    q1cy:n(F.Q1CY), q1py:n(F.Q1PY), q1d:n(F.Q1D),
-    q2cy:n(F.Q2CY), q2py:n(F.Q2PY), q2d:n(F.Q2D),
-    h1cy:n(F.H1CY), h1py:n(F.H1PY), h1d:n(F.H1D),
-    q3cy:n(F.Q3CY), q3py:n(F.Q3PY), q3d:n(F.Q3D),
-    q4cy:n(F.Q4CY), q4py:n(F.Q4PY), q4d:n(F.Q4D),
-    h2cy:n(F.H2CY), h2py:n(F.H2PY), h2d:n(F.H2D),
-    fycy:n(F.FYCY), fypy:n(F.FYPY), fyd:n(F.FYD)
-  };
-}
-
-/* Keyed getters matching group definitions */
-const GK = {
-  mon:  r=>({cy:r.mcy,  py:r.mpy,  d:r.md  }),
-  q1:   r=>({cy:r.q1cy, py:r.q1py, d:r.q1d }),
-  q2:   r=>({cy:r.q2cy, py:r.q2py, d:r.q2d }),
-  h1:   r=>({cy:r.h1cy, py:r.h1py, d:r.h1d }),
-  q3:   r=>({cy:r.q3cy, py:r.q3py, d:r.q3d }),
-  q4:   r=>({cy:r.q4cy, py:r.q4py, d:r.q4d }),
-  h2:   r=>({cy:r.h2cy, py:r.h2py, d:r.h2d }),
-  fy:   r=>({cy:r.fycy, py:r.fypy, d:r.fyd })
-};
-
-/* ═══════════════════════════════════════════════════════════════
-   6. AGGREGATION
-      Sums CY/PY from child rows; recomputes Δ% from those totals.
-      The PBI delta (decimal fraction) is used at leaf level;
-      subtotals recompute to ensure mathematical accuracy.
-═══════════════════════════════════════════════════════════════ */
-const CY_KEYS = ['mcy','q1cy','q2cy','h1cy','q3cy','q4cy','h2cy','fycy'];
-const PY_KEYS = ['mpy','q1py','q2py','h1py','q3py','q4py','h2py','fypy'];
-const PFX     = ['m','q1','q2','h1','q3','q4','h2','fy'];
-
-function aggRows(rows) {
-  const r = {};
-  [...CY_KEYS, ...PY_KEYS].forEach(k => {
-    r[k] = rows.reduce((s, x) => s + (x[k] || 0), 0);
-  });
-  PFX.forEach(p => {
-    const cy = r[p+'cy'], py = r[p+'py'];
-    r[p+'d'] = (py && py !== 0) ? (cy - py) / Math.abs(py) : null;
-  });
-  return r;
-}
-
-/* ═══════════════════════════════════════════════════════════════
-   7. FORMATTERS
-      CY/PY  : integer, en-IN grouping (#,##0 → e.g. 3,85,100)
-      Delta% : decimal fraction × 100, one decimal, signed
-               matches DAX format "0.0%; -0.0%; -"
-═══════════════════════════════════════════════════════════════ */
-const numFmt = new Intl.NumberFormat('en-IN', { maximumFractionDigits:0 });
+/* ═══════════════════════════════════════════════
+   FORMATTERS
+═══════════════════════════════════════════════ */
+const numFmt = new Intl.NumberFormat('en-IN', {maximumFractionDigits:0});
+const DASH = '<span class="dash">—</span>';
 
 function fN(v) {
-  if (v == null || isNaN(v)) return '<span class="dash">—</span>';
+  if (v == null || isNaN(v)) return DASH;
   return numFmt.format(Math.round(v));
 }
 
 function fD(v, colour) {
-  if (v == null || isNaN(v)) return '<span class="dash">—</span>';
+  if (v == null || isNaN(v)) return DASH;
   const pct  = v * 100;
   const sign = pct >= 0 ? '+' : '';
   const txt  = sign + pct.toFixed(1) + '%';
@@ -490,39 +311,54 @@ function fD(v, colour) {
   return `<span class="${cls}">${txt}</span>`;
 }
 
-/* ═══════════════════════════════════════════════════════════════
-   8. TREE BUILD
-═══════════════════════════════════════════════════════════════ */
-function buildTree() {
-  const m = {};
-  ROWS.forEach(r => {
-    if (!m[r.l1]) m[r.l1] = { lbl:r.l1, s:r.l1s, l2:{} };
-    const m2 = m[r.l1].l2;
-    if (!m2[r.l2]) m2[r.l2] = { lbl:r.l2, s:r.l2s, l3:{} };
-    const m3 = m2[r.l2].l3;
-    if (!m3[r.l3]) m3[r.l3] = { lbl:r.l3, s:r.l3s, rows:[] };
-    m3[r.l3].rows.push(r);
+/* ═══════════════════════════════════════════════
+   AGGREGATION — sum CY/PY, recompute delta
+═══════════════════════════════════════════════ */
+const CY_KEYS = ['mcy','q1cy','q2cy','h1cy','q3cy','q4cy','h2cy','fycy'];
+const PY_KEYS = ['mpy','q1py','q2py','h1py','q3py','q4py','h2py','fypy'];
+const PFX     = ['m','q1','q2','h1','q3','q4','h2','fy'];
+
+function agg(rows) {
+  const r = {};
+  [...CY_KEYS, ...PY_KEYS].forEach(k => { r[k] = rows.reduce((s,x) => s+(x[k]||0), 0); });
+  PFX.forEach(p => {
+    const cy = r[p+'cy'], py = r[p+'py'];
+    r[p+'d'] = (py && py !== 0) ? (cy - py) / Math.abs(py) : null;
   });
-  const sort = o => Object.values(o).sort((a,b)=>a.s-b.s);
-  return sort(m).map(n1=>({
-    ...n1, l2: sort(n1.l2).map(n2=>({ ...n2, l3: sort(n2.l3) }))
-  }));
+  return r;
 }
 
-/* ═══════════════════════════════════════════════════════════════
-   9. RENDER HELPERS
-═══════════════════════════════════════════════════════════════ */
-const visGrps = () => GROUPS.filter(g => S.vis[g.id]);
+/* ═══════════════════════════════════════════════
+   TREE BUILD
+═══════════════════════════════════════════════ */
+function buildTree() {
+  const m = {};
+  DATA.rows.forEach(r => {
+    if (!m[r.l1]) m[r.l1] = {lbl:r.l1, s:r.l1s||0, l2:{}};
+    const m2 = m[r.l1].l2;
+    if (!m2[r.l2]) m2[r.l2] = {lbl:r.l2, s:r.l2s||0, l3:{}};
+    const m3 = m2[r.l2].l3;
+    if (!m3[r.l3]) m3[r.l3] = {lbl:r.l3, s:r.l3s||0, rows:[]};
+    m3[r.l3].rows.push(r);
+  });
+  const srt = o => Object.values(o).sort((a,b) => a.s - b.s);
+  return srt(m).map(n1 => ({...n1, l2: srt(n1.l2).map(n2 => ({...n2, l3: srt(n2.l3)}))}));
+}
 
-function cells(row) {
-  return visGrps().map((g, gi, arr) => {
-    const { cy, py, d } = GK[g.id](row);
-    const last  = gi === arr.length - 1;
-    const cc    = S.opts.aggShade ? g.cCls : '';
-    const le    = last ? ' last' : '';
-    return `<td class="cell ${cc}">${fN(cy)}</td>`+
-           `<td class="cell ${cc}">${fN(py)}</td>`+
-           `<td class="cell delta ${cc}${le}">${fD(d, S.opts.deltaColor)}</td>`;
+/* ═══════════════════════════════════════════════
+   RENDER HELPERS
+═══════════════════════════════════════════════ */
+const vg = () => GROUPS.filter(g => S.vis[g.id]);
+
+function renderCells(row) {
+  return vg().map((g, gi, arr) => {
+    const [cyk, pyk, dk] = g.keys;
+    const last = gi === arr.length - 1;
+    const cc   = S.opts.aggShade ? g.cCls : '';
+    const le   = last ? ' le' : '';
+    return `<td class="c ${cc}">${fN(row[cyk])}</td>`
+         + `<td class="c ${cc}">${fN(row[pyk])}</td>`
+         + `<td class="c dt ${cc}${le}">${fD(row[dk], S.opts.deltaColor)}</td>`;
   }).join('');
 }
 
@@ -532,41 +368,42 @@ function chevron(open) {
     : `<svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>`;
 }
 
-function xe(s) { return String(s).replace(/\\/g,'\\\\').replace(/'/g,"\\'"); }
-function he(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function esc(s) { return String(s).replace(/'/g, "\\'"); }
+function he(s)  { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 
-/* ═══════════════════════════════════════════════════════════════
-   10. RENDER — HEADER
-═══════════════════════════════════════════════════════════════ */
+/* ═══════════════════════════════════════════════
+   RENDER HEADER
+═══════════════════════════════════════════════ */
 function renderHeader() {
-  const vg = visGrps();
-  let r1 = `<tr><th class="th-hier" rowspan="2">Brand hierarchy</th>`;
-  vg.forEach((g, i) => {
-    const lbl = g.id === 'mon' ? MON_LABEL : G_LABEL[g.id];
-    r1 += `<th class="th-grp ${g.hCls}" colspan="3">${lbl}</th>`;
+  const v = vg();
+  let r1 = `<tr><th class="th-h" rowspan="2">Brand hierarchy</th>`;
+  v.forEach(g => {
+    const lbl = g.id === 'mon' ? (DATA.month || '—') : g.label;
+    r1 += `<th class="th-g ${g.hCls}" colspan="3">${lbl}</th>`;
   });
   r1 += '</tr>';
-
   let r2 = '<tr>';
-  vg.forEach((g, gi) => {
-    const last = gi === vg.length - 1;
-    const sc   = g.sCls;
-    r2 += `<th class="th-sub cy ${sc}"   >CY</th>`+
-          `<th class="th-sub    ${sc}"   >PY</th>`+
-          `<th class="th-sub    ${sc}${last?' last':''}">Δ%</th>`;
+  v.forEach((g, gi) => {
+    const last = gi === v.length - 1;
+    r2 += `<th class="th-s cy ${g.sCls}">CY</th>`
+        + `<th class="th-s ${g.sCls}">PY</th>`
+        + `<th class="th-s ${g.sCls}${last?' le':''}">&#916;%</th>`;
   });
-  r2 += '</tr>';
-  return r1 + r2;
+  return r1 + r2 + '</tr>';
 }
 
-/* ═══════════════════════════════════════════════════════════════
-   11. RENDER — BODY
-═══════════════════════════════════════════════════════════════ */
+/* ═══════════════════════════════════════════════
+   RENDER BODY
+═══════════════════════════════════════════════ */
 function renderBody() {
-  if (!ROWS.length) {
-    document.getElementById('t-body').innerHTML =
-      `<tr><td colspan="100" style="padding:40px;text-align:center;color:var(--tx-3);font-size:13px">
-        Add measures and hierarchy columns to the HTML Viewer field wells.
+  if (!DATA.rows.length) {
+    document.getElementById('tbody').innerHTML =
+      `<tr><td colspan="100">
+        <div class="empty">
+          <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+          <div class="empty-title">Waiting for data</div>
+          <div class="empty-sub">Change the month slicer or check the HTML Visual measure is wired to this visual's HTML Content field well.</div>
+        </div>
       </td></tr>`;
     return;
   }
@@ -575,218 +412,123 @@ function renderBody() {
   let html = '';
 
   tree.forEach(n1 => {
-    const id1  = n1.lbl;
-    const op1  = EX.l1[id1] !== false;
-    const rows1 = n1.l2.flatMap(n2 => n2.l3.flatMap(n3 => n3.rows));
-    const d1   = aggRows(rows1);
-
-    html += `<tr class="r-l1"><td class="col-h">
-      <div class="h-inner" style="padding-left:8px">
-        <button class="xbtn" onclick="toggle('l1','${xe(id1)}')">${chevron(op1)}</button>
-        <span class="h-lbl" title="${he(n1.lbl)}">${he(n1.lbl)}</span>
-      </div></td>${cells(d1)}</tr>`;
-
+    const id1 = n1.lbl;
+    const op1 = EX.l1[id1] !== false;
+    const d1  = agg(n1.l2 ? Object.values(n1.l2).flatMap(n2 => Object.values(n2.l3).flatMap(n3 => n3.rows)) : []);
+    html += `<tr class="rl1"><td class="col-h"><div class="h-in" style="padding-left:8px">
+      <button class="xb" onclick="toggle('l1','${esc(id1)}')">${chevron(op1)}</button>
+      <span class="h-lb" title="${he(n1.lbl)}">${he(n1.lbl)}</span>
+    </div></td>${renderCells(d1)}</tr>`;
     if (!op1) return;
 
     n1.l2.forEach(n2 => {
-      const id2  = id1+'::'+n2.lbl;
-      const op2  = EX.l2[id2] !== false;
-      const rows2 = n2.l3.flatMap(n3 => n3.rows);
-      const d2   = aggRows(rows2);
-
-      html += `<tr class="r-l2"><td class="col-h">
-        <div class="h-inner" style="padding-left:26px">
-          <button class="xbtn" onclick="toggle('l2','${xe(id2)}')">${chevron(op2)}</button>
-          <span class="h-lbl" title="${he(n2.lbl)}">${he(n2.lbl)}</span>
-        </div></td>${cells(d2)}</tr>`;
-
+      const id2 = id1+'::'+n2.lbl;
+      const op2 = EX.l2[id2] !== false;
+      const d2  = agg(Object.values(n2.l3).flatMap(n3 => n3.rows));
+      html += `<tr class="rl2"><td class="col-h"><div class="h-in" style="padding-left:26px">
+        <button class="xb" onclick="toggle('l2','${esc(id2)}')">${chevron(op2)}</button>
+        <span class="h-lb" title="${he(n2.lbl)}">${he(n2.lbl)}</span>
+      </div></td>${renderCells(d2)}</tr>`;
       if (!op2) return;
 
       n2.l3.forEach(n3 => {
         const id3 = id2+'::'+n3.lbl;
         const op3 = EX.l3[id3] !== false;
-        const d3  = aggRows(n3.rows);
-
-        html += `<tr class="r-l3"><td class="col-h">
-          <div class="h-inner" style="padding-left:44px">
-            <button class="xbtn" onclick="toggle('l3','${xe(id3)}')">${chevron(op3)}</button>
-            <span class="h-lbl" title="${he(n3.lbl)}">${he(n3.lbl)}</span>
-          </div></td>${cells(d3)}</tr>`;
-
+        const d3  = agg(n3.rows);
+        html += `<tr class="rl3"><td class="col-h"><div class="h-in" style="padding-left:44px">
+          <button class="xb" onclick="toggle('l3','${esc(id3)}')">${chevron(op3)}</button>
+          <span class="h-lb" title="${he(n3.lbl)}">${he(n3.lbl)}</span>
+        </div></td>${renderCells(d3)}</tr>`;
         if (!op3) return;
 
         n3.rows.forEach(leaf => {
-          html += `<tr class="r-l4"><td class="col-h">
-            <div class="h-inner" style="padding-left:60px">
-              <span class="lpad"></span>
-              <span class="h-lbl" title="${he(leaf.l4)}">${he(leaf.l4)}</span>
-            </div></td>${cells(leaf)}</tr>`;
+          html += `<tr class="rl4"><td class="col-h"><div class="h-in" style="padding-left:60px">
+            <span class="lpad"></span>
+            <span class="h-lb" title="${he(leaf.l4)}">${he(leaf.l4)}</span>
+          </div></td>${renderCells(leaf)}</tr>`;
         });
       });
     });
   });
 
-  /* Grand total */
   if (S.opts.grandTotal) {
-    const gt = aggRows(ROWS);
-    html += `<tr class="r-tot"><td class="col-h">
-      <div class="h-inner" style="padding-left:8px">
-        <span class="lpad"></span>
-        <span class="h-lbl">Grand total</span>
-      </div></td>${cells(gt)}</tr>`;
+    const gt = agg(DATA.rows);
+    html += `<tr class="rtot"><td class="col-h"><div class="h-in" style="padding-left:8px">
+      <span class="lpad"></span><span class="h-lb">Grand total</span>
+    </div></td>${renderCells(gt)}</tr>`;
   }
 
-  document.getElementById('t-body').innerHTML = html;
+  document.getElementById('tbody').innerHTML = html;
 }
 
-function toggle(level, id) {
-  EX[level][id] = EX[level][id] === false ? true : false;
+function toggle(lv, id) {
+  EX[lv][id] = EX[lv][id] === false ? true : false;
   renderBody();
 }
 
-/* ═══════════════════════════════════════════════════════════════
-   12. FULL RENDER
-═══════════════════════════════════════════════════════════════ */
+/* ═══════════════════════════════════════════════
+   FULL RENDER
+═══════════════════════════════════════════════ */
 function render() {
-  document.documentElement.style.setProperty('--fs', S.fontSize+'px');
+  document.documentElement.setAttribute('data-theme', S.theme);
+  document.documentElement.style.setProperty('--fs', S.fontSize + 'px');
   document.body.classList.toggle('compact', S.opts.compact);
-  document.getElementById('month-pill').textContent = MON_LABEL;
-  document.getElementById('t-head').innerHTML = renderHeader();
+  document.getElementById('mpill').textContent = DATA.month || '—';
+  document.getElementById('thead').innerHTML = renderHeader();
   renderBody();
 }
 
-/* ═══════════════════════════════════════════════════════════════
-   13. SETTINGS PANEL
-═══════════════════════════════════════════════════════════════ */
-const FS_OPTS = [11,12,13,14,15,16];
+/* ═══════════════════════════════════════════════
+   SETTINGS PANEL
+═══════════════════════════════════════════════ */
+function setTheme(t) {
+  S.theme = t;
+  document.documentElement.setAttribute('data-theme', t);
+  document.getElementById('theme-icon').textContent   = t === 'dark' ? '🌙' : '☀️';
+  document.getElementById('theme-lbl-text').textContent = t === 'dark' ? 'Dark mode' : 'Light mode';
+  document.getElementById('btn-light').classList.toggle('active', t === 'light');
+  document.getElementById('btn-dark').classList.toggle('active',  t === 'dark');
+}
 
 function buildPanel() {
-  /* Font size */
-  document.getElementById('fs-seg').innerHTML = FS_OPTS.map(sz =>
-    `<button class="seg-btn${S.fontSize===sz?' on':''}" onclick="setFs(${sz})">${sz}px</button>`
-  ).join('');
+  // font sizes
+  document.getElementById('fs-seg').innerHTML =
+    [11,12,13,14,15,16].map(sz =>
+      `<button class="seg-btn${S.fontSize===sz?' on':''}" onclick="setFs(${sz})">${sz}px</button>`
+    ).join('');
 
-  /* Column chips */
+  // column chips
   document.getElementById('col-chips').innerHTML = GROUPS.map(g => {
-    const lbl = g.id==='mon' ? `Month (${MON_LABEL})` : G_LABEL[g.id];
+    const lbl = g.id === 'mon' ? `Month (${DATA.month||'—'})` : g.label;
     const on  = S.vis[g.id];
     return `<div class="chip${on?' on':''}">
       <span class="chip-lft"><span class="dot ${g.dotCls}"></span>${lbl}</span>
-      <label class="pill">
-        <input type="checkbox" ${on?'checked':''} onchange="toggleCol('${g.id}',this.checked)">
-        <span class="pill-tr"></span>
-      </label>
+      <label class="pill"><input type="checkbox" ${on?'checked':''} onchange="toggleCol('${g.id}',this.checked)"><span class="pill-tr"></span></label>
     </div>`;
   }).join('');
 
-  /* Display options */
+  // display options
   document.getElementById('disp-opts').innerHTML = DISP_OPTS.map(o =>
     `<div class="opt">
-      <div class="opt-info">
+      <div>
         <div class="opt-lbl">${o.lbl}</div>
         ${o.sub ? `<div class="opt-sub">${o.sub}</div>` : ''}
       </div>
-      <label class="pill">
-        <input type="checkbox" ${S.opts[o.key]?'checked':''} onchange="setOpt('${o.key}',this.checked)">
-        <span class="pill-tr"></span>
-      </label>
+      <label class="pill"><input type="checkbox" ${S.opts[o.key]?'checked':''} onchange="setOpt('${o.key}',this.checked)"><span class="pill-tr"></span></label>
     </div>`
   ).join('');
 }
 
-function setFs(sz)          { S.fontSize=sz; render(); buildPanel(); }
-function toggleCol(id, v)   { S.vis[id]=v;   render(); buildPanel(); }
-function setOpt(key, v)     { S.opts[key]=v; render(); }
-function openPanel()        { buildPanel(); document.getElementById('overlay').classList.add('open'); }
-function closePanel()       { document.getElementById('overlay').classList.remove('open'); }
-function bgClick(e)         { if(e.target===document.getElementById('overlay')) closePanel(); }
+function setFs(sz)        { S.fontSize=sz; render(); buildPanel(); }
+function toggleCol(id, v) { S.vis[id]=v;  render(); buildPanel(); }
+function setOpt(k, v)     { S.opts[k]=v;  render(); }
+function openPanel()      { buildPanel(); document.getElementById('overlay').classList.add('open'); }
+function closePanel()     { document.getElementById('overlay').classList.remove('open'); }
+function bgClick(e)       { if(e.target===document.getElementById('overlay')) closePanel(); }
 
-/* ═══════════════════════════════════════════════════════════════
-   14. EMBEDDED SAMPLE DATA
-       Built from actual DAX query results against your model.
-       Remove this entire block before deploying to production —
-       the PBI data layer above will take over automatically.
-═══════════════════════════════════════════════════════════════ */
-const SAMPLE = [
-  /* NIVEA & Labello — Skin Care */
-  {l1:'NIVEA & Labello',l1s:1,l2:'Skin Care',l2s:1,l3:'NIVEA Body Care',l3s:1,l4:'NIVEA Body',
-   mcy:877300,mpy:877300,md:0,q1cy:-1060600,q1py:-1060600,q1d:0,q2cy:664500,q2py:652200,q2d:0.0189,
-   h1cy:-396100,h1py:-408400,h1d:-0.0301,q3cy:262700,q3py:221200,q3d:0.1876,
-   q4cy:528508,q4py:567500,q4d:-0.0687,h2cy:791208,h2py:788700,h2d:0.0032,
-   fycy:395108,fypy:380300,fyd:0.0389},
-  {l1:'NIVEA & Labello',l1s:1,l2:'Skin Care',l2s:1,l3:'NIVEA Face Total',l3s:2,l4:'NIVEA Face Care',
-   mcy:385100,mpy:385100,md:0,q1cy:3531500,q1py:2567200,q1d:0.3756,q2cy:4653700,q2py:3391200,q2d:0.3723,
-   h1cy:8185200,h1py:5958400,h1d:0.3739,q3cy:4367600,q3py:3031000,q3d:0.4410,
-   q4cy:3914218,q4py:2708800,q4d:0.4450,h2cy:8281818,h2py:5739800,h2d:0.4429,
-   fycy:16467018,fypy:11698200,fyd:0.4077},
-  {l1:'NIVEA & Labello',l1s:1,l2:'Skin Care',l2s:1,l3:'NIVEA Sun',l3s:4,l4:'NIVEA Sun',
-   mcy:120500,mpy:98200,md:0.2271,q1cy:1845000,q1py:1523000,q1d:0.2113,q2cy:2134000,q2py:1789000,q2d:0.1929,
-   h1cy:3979000,h1py:3312000,h1d:0.2013,q3cy:987000,q3py:812000,q3d:0.2156,
-   q4cy:543000,q4py:434000,q4d:0.2511,h2cy:1530000,h2py:1246000,h2d:0.2279,
-   fycy:5509000,fypy:4558000,fyd:0.2086},
-  /* NIVEA & Labello — Personal Care */
-  {l1:'NIVEA & Labello',l1s:1,l2:'Personal Care',l2s:2,l3:'Deodorant',l3s:5,l4:'NIVEA Deo',
-   mcy:1245000,mpy:1123000,md:0.1086,q1cy:3876000,q1py:3512000,q1d:0.1037,q2cy:4215000,q2py:3798000,q2d:0.1098,
-   h1cy:8091000,h1py:7310000,h1d:0.1068,q3cy:3654000,q3py:3287000,q3d:0.1116,
-   q4cy:4321000,q4py:3876000,q4d:0.1148,h2cy:7975000,h2py:7163000,h2d:0.1134,
-   fycy:16066000,fypy:14473000,fyd:0.1100},
-  {l1:'NIVEA & Labello',l1s:1,l2:'Personal Care',l2s:2,l3:'Lip Care',l3s:6,l4:'Labello',
-   mcy:654000,mpy:598000,md:0.0936,q1cy:1987000,q1py:1823000,q1d:0.0900,q2cy:2143000,q2py:1965000,q2d:0.0906,
-   h1cy:4130000,h1py:3788000,h1d:0.0903,q3cy:1876000,q3py:1723000,q3d:0.0888,
-   q4cy:2134000,q4py:1956000,q4d:0.0910,h2cy:4010000,h2py:3679000,h2d:0.0900,
-   fycy:8140000,fypy:7467000,fyd:0.0901},
-  /* NIVEA & Labello — Others */
-  {l1:'NIVEA & Labello',l1s:1,l2:'Others',l2s:3,l3:'Other Business',l3s:23,l4:'Other Business Mass Marke',
-   mcy:877300,mpy:877300,md:0,q1cy:-1060600,q1py:-1060600,q1d:0,q2cy:664500,q2py:652200,q2d:0.0189,
-   h1cy:-396100,h1py:-408400,h1d:-0.0301,q3cy:262700,q3py:221200,q3d:0.1876,
-   q4cy:528508,q4py:567500,q4d:-0.0687,h2cy:791208,h2py:788700,h2d:0.0032,
-   fycy:395108,fypy:380300,fyd:0.0389},
-  /* Derma — Skin Care */
-  {l1:'Derma',l1s:2,l2:'Skin Care',l2s:1,l3:'EUCERIN Face',l3s:12,l4:'EUCERIN Face Moisture',
-   mcy:385100,mpy:385100,md:0,q1cy:3531500,q1py:2567200,q1d:0.3756,q2cy:4653700,q2py:3391200,q2d:0.3723,
-   h1cy:8185200,h1py:5958400,h1d:0.3739,q3cy:4367600,q3py:3031000,q3d:0.4410,
-   q4cy:3914218,q4py:2708800,q4d:0.4450,h2cy:8281818,h2py:5739800,h2d:0.4429,
-   fycy:16467018,fypy:11698200,fyd:0.4077},
-  {l1:'Derma',l1s:2,l2:'Skin Care',l2s:1,l3:'EUCERIN Face',l3s:12,l4:'EUCERIN Face Cleansing',
-   mcy:321000,mpy:265000,md:0.2113,q1cy:4653700,q1py:3391200,q1d:0.3723,q2cy:4653700,q2py:3391200,q2d:0.3723,
-   h1cy:9307400,h1py:6782400,h1d:0.3723,q3cy:3654000,q3py:2678000,q3d:0.3645,
-   q4cy:3245000,q4py:2354000,q4d:0.3786,h2cy:6899000,h2py:5032000,h2d:0.3712,
-   fycy:16206400,fypy:11814400,fyd:0.3717},
-  {l1:'Derma',l1s:2,l2:'Skin Care',l2s:1,l3:'EUCERIN Other',l3s:16,l4:'EUCERIN Scalp&Hair',
-   mcy:198000,mpy:156000,md:0.2692,q1cy:3219100,q1py:2187900,q1d:0.4713,q2cy:3557600,q2py:2517200,q2d:0.4133,
-   h1cy:6776700,h1py:4705100,h1d:0.4403,q3cy:3572000,q3py:2450900,q3d:0.4574,
-   q4cy:2974279,q4py:2363400,q4d:0.2585,h2cy:6546279,h2py:4814300,h2d:0.3598,
-   fycy:13322979,fypy:9519400,fyd:0.3996},
-  /* Health Care */
-  {l1:'Health Care',l1s:3,l2:'Skin Care',l2s:1,l3:'Face SPF',l3s:8,l4:'Hansaplast Wound',
-   mcy:543000,mpy:487000,md:0.1150,q1cy:1654000,q1py:1487000,q1d:0.1123,q2cy:1789000,q2py:1612000,q2d:0.1098,
-   h1cy:3443000,h1py:3099000,h1d:0.1110,q3cy:1523000,q3py:1365000,q3d:0.1157,
-   q4cy:1876000,q4py:1687000,q4d:0.1120,h2cy:3399000,h2py:3052000,h2d:0.1137,
-   fycy:6842000,fypy:6151000,fyd:0.1123},
-  {l1:'Health Care',l1s:3,l2:'Personal Care',l2s:2,l3:'Body Care',l3s:9,l4:'Nivea Med',
-   mcy:432000,mpy:398000,md:0.0854,q1cy:1312000,q1py:1198000,q1d:0.0951,q2cy:1432000,q2py:1301000,q2d:0.1007,
-   h1cy:2744000,h1py:2499000,h1d:0.0980,q3cy:1198000,q3py:1087000,q3d:0.1021,
-   q4cy:1543000,q4py:1398000,q4d:0.1037,h2cy:2741000,h2py:2485000,h2d:0.1030,
-   fycy:5485000,fypy:4984000,fyd:0.1005},
-  /* Other Brands */
-  {l1:'Other Brands',l1s:4,l2:'Others',l2s:3,l3:'Other Brands',l3s:22,l4:'8x4 Deo',
-   mcy:-4100,mpy:-4100,md:0,q1cy:13300,q1py:13300,q1d:0,q2cy:8400,q2py:7800,q2d:0.0769,
-   h1cy:21700,h1py:21100,h1d:0.0284,q3cy:6540,q3py:5800,q3d:0.1276,
-   q4cy:7234,q4py:6543,q4d:0.1056,h2cy:13774,h2py:12343,h2d:0.1159,
-   fycy:35474,fypy:33443,fyd:0.0607}
-].map(r => {
-  /* ensure all numeric fields are numbers */
-  ['mcy','mpy','md','q1cy','q1py','q1d','q2cy','q2py','q2d',
-   'h1cy','h1py','h1d','q3cy','q3py','q3d','q4cy','q4py','q4d',
-   'h2cy','h2py','h2d','fycy','fypy','fyd'].forEach(k=>{
-    if(r[k]==null) r[k]=null; else r[k]=Number(r[k]);
-  });
-  return r;
-});
-
-/* ═══════════════════════════════════════════════════════════════
+/* ═══════════════════════════════════════════════
    BOOT
-═══════════════════════════════════════════════════════════════ */
+═══════════════════════════════════════════════ */
 loadData();
 render();
 </script>
